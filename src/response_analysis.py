@@ -7,12 +7,12 @@ cell_count_csv = 'cell-count.csv'
 relative_frequencies_csv = 'relative-frequencies.csv'
 
 # Read the input CSV files
-df_cell_count = pd.read_csv(cell_count_csv)
-df_rel_freq = pd.read_csv(relative_frequencies_csv)
+cell_count_df = pd.read_csv(cell_count_csv)
+rel_freq_df = pd.read_csv(relative_frequencies_csv)
 
 # Merge the DataFrames on 'sample' column
-df = df_rel_freq.merge(
-    df_cell_count[['sample', 'condition', 'treatment', 'response', 'sample_type']],
+df = rel_freq_df.merge(
+    cell_count_df[['sample', 'condition', 'treatment', 'response', 'sample_type']],
     on=['sample'],
 )
 
