@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DBMS SQL Query</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>DBMS SQL Query</h1>
+    <p><a href="/" style="font-weight: bold;">Back to Home</a></p>
+    <form method="post" action="/query">
+        <label for="sql_query">Enter SQL:</label><br>
+        <textarea name="sql_query" id="sql_query" required></textarea><br>
+        <button type="submit">Execute</button>
+    </form>
+
+    {% if error %}
+        <div class="error"><strong>Error:</strong> {{ error }}</div>
+    {% endif %}
+
+    {% if result %}
+        <div class="result">
+            <h2>Result:</h2>
+            {{ result | safe }}
+        </div>
+    {% endif %}
+</body>
+</html>

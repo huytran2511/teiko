@@ -27,3 +27,5 @@ rel_freq_df['percentage'] = (rel_freq_df['count'] / rel_freq_df['total_count'] *
 
 # Output the DataFrame to a new CSV file
 rel_freq_df.to_csv(output_file, index=False)
+
+print(f'Relative frequencies saved to {output_file}')

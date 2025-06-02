@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Response Analysis</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Response Analysis</h1>
+  <p><a href="/" style="font-weight: bold;">Back to Home</a></p>
+
+  <h2>Boxplots</h2>
+  {% for plot in plots %}
+    <div>
+      <img src="/static/plots/{{ plot }}" alt="{{ plot }}" style="max-width: 600px;" />
+    </div>
+  {% endfor %}
+
+  <h2>Mann-Whitney U Test</h2>
+  <p>A cell population is significantly different if p-value < 0.05</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Population</th>
+        <th>U-stat</th>
+        <th>p-value</th>
+        <th>Significance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+      <tr>
+        <td>{{ result.population }}</td>
+        <td>{{ result.u_stat }}</td>
+        <td>{{ result.p_value }}</td>
+        <td>{{ result.significance }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

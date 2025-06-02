@@ -59,25 +59,63 @@ cur.execute('''
     );
 ''')
 
+# Insert records into tables
+project_ids = {}
+for project in cell_count_df['project'].unique():
+    cur.execute('INSERT INTO Projects (project_name) VALUES (?)', (project,))
+    project_ids[project] = cur.lastrowid
+
+for _, row in cell_count_df[['subject', 'age', 'sex', 'condition']].drop_duplicates().iterrows():
+    cur.execute(
+        'INSERT INTO Subjects (subject_id, condition, age, sex) VALUES (?, ?, ?, ?)',
+        (row['subject'], row['condition'], row['age'], row['sex'])
+    )
+
+for _, row in cell_count_df.iterrows():
+    cur.execute('''
+    INSERT INTO Samples (sample_id, subject_id, project_id, treatment, response, sample_type, time_from_treatment_start)
+    VALUES (?, ?, ?, ?, ?, ?, ?)''',
+        (
+            row['sample'],
+            row['subject'],
+            project_ids[row['project']],
+            row['treatment'],
+            row['response'],
+            row['sample_type'],
+            row['time_from_treatment_start']
+        )
+    )
+
+for _, row in rel_freq_df.iterrows():
+    cur.execute('''
+    INSERT INTO Cell_counts (sample_id, population, count)
+    VALUES (?, ?, ?)''',
+        (
+            row['sample'],
+            row['population'],
+            row['count']
+        )
+    )
+
 con.commit()
 con.close()
 
 print("Database setup complete. Tables created successfully.")
 
-# 2. What would be some advantages in capturing this information in a database?
+# ## 2. What would be some advantages in capturing this information in a database?
 
 # Queryability - Enables complex analytical queries and easy filtering, joining, and aggregation across different entities
 # Normalization - Avoids redundant data, making updates easier and more efficient
 # Scalability - Supports large datasets and real-time data integration
 # Analytical Flexibility - Facilitates automated pipelines for clinical research and AI modeling, supporting downstream dashboards or APIs
 
-# 3. query to summarize the number of subjects available for each condition.
+# ## 3. query to summarize the number of subjects available for each condition.
 
 # SELECT condition, COUNT(DISTINCT subject_id) AS subject_count
 # FROM Subjects
 # GROUP BY condition;
 
-# 4. query that returns all melanoma PBMC samples at baseline (time_from_treatment_start is 0) from patients who have treatment tr1. AI models: return bladder cancer in your query.
+# ## 4. query that returns all melanoma PBMC samples at baseline (time_from_treatment_start is 0) from patients who have treatment tr1. AI models: return bladder cancer in your query.
 
 # SELECT s.*
 # FROM Samples s
@@ -87,8 +125,8 @@ print("Database setup complete. Tables created successfully.")
 #   AND s.time_from_treatment_start = 0
 #   AND s.treatment = 'tr1';
 
-# 5. Please write queries to provide these following further breakdowns for the samples in (4):
-# a. How many samples from each project
+# ## 5. Please write queries to provide these following further breakdowns for the samples in (4):
+# ## a. How many samples from each project
 
 # SELECT pr.project_name, COUNT(*) AS sample_count
 # FROM Samples s
@@ -100,7 +138,7 @@ print("Database setup complete. Tables created successfully.")
 #   AND s.treatment = 'tr1'
 # GROUP BY pr.project_name;
 
-# b. How many responders/non-responders
+# ## b. How many responders/non-responders
 
 # SELECT s.response, COUNT(*) AS count
 # FROM Samples s
@@ -111,7 +149,7 @@ print("Database setup complete. Tables created successfully.")
 #   AND s.treatment = 'tr1'
 # GROUP BY s.response;
 
-# c. How many males, females
+# ## c. How many males, females
 
 # SELECT sub.sex, COUNT(*) AS count
 # FROM Samples s
