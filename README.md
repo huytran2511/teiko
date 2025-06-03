@@ -1,5 +1,7 @@
 # Teiko Technical
 
+## Instructions
+
 ### 1. Clone the Repository
 
 ```bash
