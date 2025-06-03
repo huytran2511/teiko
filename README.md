@@ -39,6 +39,7 @@ python src/response_analysis.py
 python src/db_setup.py
 ```
 - This will create a database schema in SQLite, by creating the necessary tables and inserting records from cell-count.csv and relative-frequencies.csv (Database Q1).
+- It will generate teiko-data.db
 - The answers to Database Q2, 3, 4, 5 are also included in db_setup.py as comments at the end.
 
 ### 7. Start the App
